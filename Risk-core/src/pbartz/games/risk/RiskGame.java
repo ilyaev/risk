@@ -1,27 +1,47 @@
 package pbartz.games.risk;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import pbartz.games.risk.screens.MainScreen;
+import pbartz.games.risk.screens.SandboxScreen;
 
-public class RiskGame extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
+import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.utils.TimeUtils;
+
+public class RiskGame extends Game {
+	Texture img; 
+	
+	PooledEngine engine;
+	MainScreen mainScreen;
+	SandboxScreen sandboxScreen;
+	
+	long lastTime;
+	int frames;
 	
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		lastTime = TimeUtils.millis();		
+		frames = 0;		
+		
+		mainScreen = new MainScreen(this);
+		sandboxScreen = new SandboxScreen(this);
+		
+		
+		setScreen(mainScreen);
+		//setScreen(sandboxScreen);
+		
 	}
 
-	@Override
-	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
+	public void calcFPS() {
+		if ((TimeUtils.millis() - lastTime) >= 1000 ) {
+			lastTime = TimeUtils.millis();
+			Gdx.app.log("APP", "FPS:" + Integer.toString(frames));
+			frames = 0;
+		} else {
+			
+			frames += 1;
+		}
 	}
+	
 }
