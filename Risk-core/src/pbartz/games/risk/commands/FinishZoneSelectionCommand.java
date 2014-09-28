@@ -28,6 +28,7 @@ public class FinishZoneSelectionCommand extends Command {
 		
 		
 		if (selection.getTargetZone() > -1) {
+			
 			EventBus.setString("GAME_STATE", "START_ROLL");
 			EventBus.setInt("SRC_ZONE", selection.getSrcZone());
 			EventBus.setInt("TARGET_ZONE", selection.getTargetZone());

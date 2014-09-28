@@ -23,8 +23,13 @@ public class StartZoneSelectionCommand extends Command {
 	
 	@Override
 	public void execute() {		
-		EntityFactory.startBlinkZone(srcZoneId);
-		EntityFactory.createZoneSelector(srcZoneId);
+		
+		if (EntityFactory.getZoneComponentById(srcZoneId).getDices() > 1) {
+		
+			EntityFactory.startBlinkZone(srcZoneId);
+			EntityFactory.createZoneSelector(srcZoneId);
+			
+		}
 	}
 
 	@Override

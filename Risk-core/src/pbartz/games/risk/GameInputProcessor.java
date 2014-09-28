@@ -39,7 +39,6 @@ public class GameInputProcessor implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		//Gdx.app.log("DOWN", Integer.toString(screenX) + " ; " + Integer.toString(screenY));
 		GameInputProcessor.setTouchMode(TOUCH_DOWN, screenX, screenY);
 		return false;
 	}
@@ -73,14 +72,12 @@ public class GameInputProcessor implements InputProcessor {
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		GameInputProcessor.setTouchMode(TOUCH_UP, screenX, screenY);
-		//Gdx.app.log("UP", Integer.toString(screenX) + " ; " + Integer.toString(screenY));
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		GameInputProcessor.setTouchMode(TOUCH_MOVE, screenX, screenY);
-		//Gdx.app.log("MOVE", Integer.toString(screenX) + " ; " + Integer.toString(screenY));
 		return false;
 	}
 
