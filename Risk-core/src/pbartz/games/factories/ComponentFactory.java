@@ -1,9 +1,6 @@
 package pbartz.games.factories;
 
-import com.badlogic.ashley.core.Component;
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 

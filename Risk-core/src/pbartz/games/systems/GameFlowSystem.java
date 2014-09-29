@@ -1,11 +1,13 @@
 package pbartz.games.systems;
 
+import pbartz.games.components.ZoneComponent;
 import pbartz.games.risk.EntityFactory;
 import pbartz.games.utils.EventBus;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.gdx.Gdx;
 
 public class GameFlowSystem extends EntitySystem {
 	
@@ -24,6 +26,9 @@ public class GameFlowSystem extends EntitySystem {
 	
 	Entity srcEntity = null;
 	Entity targetEntity = null;
+	
+	ZoneComponent srcZoneCmp = null;
+	ZoneComponent targetZoneCmp = null;
 	
 	Entity rollEntity = null;
 	
@@ -54,7 +59,8 @@ public class GameFlowSystem extends EntitySystem {
 	}
 
 	private void processEvents() {
-		if (EventBus.popString("GAME_STATE") == "START_ROLL") {
+
+		if (EventBus.popString("GAME_STATE").equalsIgnoreCase("START_ROLL")) {
 			
 			srcZone = EventBus.popInt("SRC_ZONE");
 			targetZone = EventBus.popInt("TARGET_ZONE");
@@ -62,12 +68,23 @@ public class GameFlowSystem extends EntitySystem {
 			srcEntity = EntityFactory.getZoneEntityById(srcZone);
 			targetEntity = EntityFactory.getZoneEntityById(targetZone);
 			
+			srcZoneCmp = EntityFactory.getZoneComponentById(srcZone);
+			targetZoneCmp = EntityFactory.getZoneComponentById(targetZone);
+			
+			Gdx.app.log("START", String.format("START_ROLL: %d to %d", srcZone, targetZone));
+			
 			//srcCountry = srcEntity.getComponent(ZoneComponent.class).getCountry();
 			//targetCountry = targetEntity.getComponent(ZoneComponent.class).getCountry();
 			
 
 			state = START_ROLL;			
 		}
+		
+	}
+
+	public void reset() {
+
+		state = WAITING_FOR_SELECT;
 		
 	}
 

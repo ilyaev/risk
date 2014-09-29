@@ -1,5 +1,7 @@
 package pbartz.games.utils;
 
+import com.badlogic.gdx.Gdx;
+
 public class Metrics {
 	
 	public static float widthDp;
@@ -16,6 +18,7 @@ public class Metrics {
 	}
 
 	public static void initHexMetrics() {
+		
 		cellSize = Metrics.dp2px(Metrics.widthDp / 50);
 		cellsH = (int) ((Metrics.widthPx / cellSize) / 1.7);
 		cellsV = (int) ((Metrics.heightPx / cellSize) / 1.5);

@@ -17,16 +17,15 @@ public class DesktopLauncher {
 	}
 	
 	private static void initMetrics() {
-		float widthDp = 1;
-		float heightDp = 1;
+
 		float widthPx = 480;
 		float heightPx = 800;
 		
-		Metrics.widthDp = widthDp;
-		Metrics.heightDp = heightDp;
+		Metrics.widthDp = 320;
+		Metrics.heightDp = 533.3f;
 		Metrics.widthPx = widthPx;
 		Metrics.heightPx = heightPx;
-		Metrics.density = 1.6f;	
+		Metrics.density = 1.5f;	
 		
 		Metrics.initHexMetrics();
 	}

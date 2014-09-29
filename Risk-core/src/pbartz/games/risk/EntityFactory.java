@@ -85,9 +85,7 @@ public class EntityFactory {
 			Entity entity = EntityFactory.getZoneDiceEntity(i, j);
 			
 			if (j < toRemove) {
-				
-				prevPosition = EntityFactory.getEntityPositionComponent(entity);
-				
+
 				entity.add(ComponentFactory.getPositionInterpolationComponent(
 						EntityFactory.getEngine(), 
 						EntityFactory.getEntityPositionComponent(entity),
@@ -113,9 +111,6 @@ public class EntityFactory {
 					0.3f, 
 					Interpolation.EASE_IN
 			), 0.05f * j);
-			
-			
-			prevPosition = EntityFactory.getEntityPositionComponent(entity);
 			
 		}
 		

@@ -24,7 +24,7 @@ public class FinishZoneSelectionCommand extends Command {
 		
 		EntityFactory.finishBlinkZone(selection.getSrcZone());
 		EntityFactory.finishBlinkZone(selection.getTargetZone());
-		EntityFactory.turnZoneToCountry(selection.getTargetZone(), selection.getSrcZone());
+		
 		
 		
 		if (selection.getTargetZone() > -1) {
@@ -36,6 +36,7 @@ public class FinishZoneSelectionCommand extends Command {
 			
 			EntityFactory.decreaseZoneDices(selection.getSrcZone(), 1);
 			EntityFactory.decreaseZoneDices(selection.getTargetZone(), 2);
+			EntityFactory.turnZoneToCountry(selection.getTargetZone(), selection.getSrcZone());
 			
 		}
 		

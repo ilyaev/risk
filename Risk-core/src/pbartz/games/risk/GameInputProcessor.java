@@ -2,7 +2,6 @@ package pbartz.games.risk;
 
 import pbartz.games.utils.Metrics;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 
 public class GameInputProcessor implements InputProcessor {

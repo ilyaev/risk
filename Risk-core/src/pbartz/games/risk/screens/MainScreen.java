@@ -10,6 +10,7 @@ import pbartz.games.systems.ColorAlphaInterpolationSystem;
 import pbartz.games.systems.ColorInterpolationSystem;
 import pbartz.games.systems.CommandExecutionSystem;
 import pbartz.games.systems.DelayedComponentSystem;
+import pbartz.games.systems.GameFlowSystem;
 import pbartz.games.systems.PositionInterpolationSystem;
 import pbartz.games.systems.ShapeRenderingSystem;
 import pbartz.games.systems.TextureRenderingSystem;
@@ -44,7 +45,7 @@ public class MainScreen implements Screen {
 		engine.getSystem(ShapeRenderingSystem.class).endRendering();
 		engine.getSystem(TextureRenderingSystem.class).endRendering();		
 		
-		game.calcFPS();
+		//game.calcFPS();
 	}
 
 	@Override
@@ -60,8 +61,12 @@ public class MainScreen implements Screen {
 			initScreen();
 		}
 		
+		engine.getSystem(GameFlowSystem.class).reset();
+		
 		EntityFactory.init(engine);
 		Gdx.input.setInputProcessor(new GameInputProcessor());
+		
+		Gdx.app.log("METRICS", String.format("widthDp: %f, heightDp: %f, Density: %f", Metrics.widthDp, Metrics.heightDp, Metrics.density));
 		
 	}
 
@@ -79,6 +84,7 @@ public class MainScreen implements Screen {
 		engine.addSystem(new ArrowRenderingSystem(engine));
 		engine.addSystem(new ZoneSelectionSystem());
 		engine.addSystem(new CommandExecutionSystem(engine));
+		engine.addSystem(new GameFlowSystem());
 		engine.addSystem(new DelayedComponentSystem(engine));
 		
 		EntityFactory.init(engine);

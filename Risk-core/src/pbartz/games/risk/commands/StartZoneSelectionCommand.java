@@ -1,15 +1,7 @@
 package pbartz.games.risk.commands;
 
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.math.MathUtils;
-
-import pbartz.games.components.PositionComponent;
-import pbartz.games.components.ZoneComponent;
-import pbartz.games.factories.ComponentFactory;
 import pbartz.games.risk.EntityFactory;
-import pbartz.games.risk.MapGenerator;
 import pbartz.games.utils.Command;
-import pbartz.games.utils.Interpolation;
 
 public class StartZoneSelectionCommand extends Command {
 
