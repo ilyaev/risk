@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.graphics.Pixmap;
 
@@ -36,6 +37,7 @@ public class MapGenerator {
 	private Texture diceTexture;	
 	private static Array<Entity> zones = new Array<Entity>();
 	private static Entity dices[][];
+	private static Vector2 tmpVector2 = new Vector2();
 	
 	public MapGenerator(int cellsH, int cellsV, int cellSize) {
 		
@@ -53,7 +55,7 @@ public class MapGenerator {
 		
 		cells = new HexCell[cellsH][cellsV];
 		
-		dices = new Entity[zonesCount + 1][8];
+		dices = new Entity[zonesCount + 1][16];
 		
 		createWorld();
 		
@@ -293,7 +295,7 @@ public class MapGenerator {
 		for (int i = 1 ; i <= zonesCount ; i++) {
 			
 			zone = EntityFactory.getZoneComponentById(i);
-			zone.setDices(7);
+			zone.setDices(MathUtils.random(1,7));
 			
 		}
 	}
@@ -319,12 +321,48 @@ public class MapGenerator {
 		}
 		
 	}
+	
+	public static Vector2 getZoneDicePosition(int zoneId, int dice) {
+		
+		tmpVector2 = getZoneCenterPosition(zoneId);
+		
+		float x = tmpVector2.x;
+		float y = tmpVector2.y;
+		
+		int step = dice;
+		
+		if (step >= 4) {
+			
+			x += 12;
+			y -= 10;
+			step = dice - 4;		
+			
+		}
+		
+		y += (step * 12);	
+		
+		tmpVector2.set(x, y);
+		
+		return tmpVector2;
+		
+	}
+	
+	public static Vector2 getZoneCenterPosition(int zoneId) {
+		
+		HexCell srcHex = MapGenerator.getCapitalHex(zoneId);
+		
+		tmpVector2.set(srcHex.getCoordX(MapGenerator.cSize), srcHex.getCoordY(MapGenerator.cSize));
+		
+		return tmpVector2;
+		
+	}
+	
 
 	private void createStacks(int x, int y, int dices, int zoneId) {
 		
 		if (diceTexture == null) {
 			
-			diceTexture = new Texture(Gdx.files.internal("dice.png"));
+			diceTexture = ResourceFactory.getTexture("dice.png"); //new Texture(Gdx.files.internal("dice.png"));
 			
 		}
 		
@@ -520,7 +558,7 @@ public class MapGenerator {
 		
 		int start = 0;
 		
-		for(int i = toDecrease ; i < zone.getDices() ; i++) {
+		for(int i = toDecrease ; i < 12 ; i++) {
 			
 			dices[zoneId][start] = dices[zoneId][i];
 			start += 1;
@@ -528,6 +566,17 @@ public class MapGenerator {
 		}
 		
 		zone.setDices(zone.getDices() - toDecrease);
+		
+		
+	}
+
+	public static void setDiceEntity(int zoneId, int diceNum, Entity entity) {
+		dices[zoneId][diceNum] = entity;		
+	}
+
+	public static void increaseZoneDices(int zoneId, int newDices) {
+		
+		EntityFactory.getZoneComponentById(zoneId).setDices(newDices);
 		
 	}
 

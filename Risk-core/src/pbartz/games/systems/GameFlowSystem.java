@@ -77,7 +77,7 @@ public class GameFlowSystem extends EntitySystem {
 			//targetCountry = targetEntity.getComponent(ZoneComponent.class).getCountry();
 			
 
-			state = START_ROLL;			
+			//state = START_ROLL;			
 		}
 		
 	}

@@ -1,6 +1,7 @@
 package pbartz.games.risk;
 
 import pbartz.games.components.BlinkComponent;
+import pbartz.games.components.ColorAlphaComponent;
 import pbartz.games.components.ColorInterpolationComponent;
 import pbartz.games.components.DelayedComponent;
 import pbartz.games.components.PositionComponent;
@@ -18,10 +19,12 @@ import pbartz.games.utils.Interpolation;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 
 public class EntityFactory {
 	
@@ -72,11 +75,89 @@ public class EntityFactory {
 		return entity;
 	}
 	
+	public static void increaseZoneDices(int zoneId, int toAdd) {
+		
+		ZoneComponent zone = EntityFactory.getZoneComponentById(zoneId);
+		
+		int dices = zone.getDices();
+		int newDices = Math.min(8, dices + toAdd);
+		
+		//Gdx.app.log("TAG", String.format("currDices: %d, toAdd: %d, newDices: %d", dices, toAdd, newDices));
+		
+		if (dices == newDices) return;
+		
+		
+		
+		Entity entity;
+		
+		for(int i = dices ; i < newDices ; i++) {
+
+			entity = MapGenerator.getDiceEntity(zoneId, i);
+			
+			if (entity == null) {
+				
+				entity = EntityFactory.createTextureEntity(
+					ResourceFactory.getTexture("dice.png"), 
+					100,
+					100
+				);
+				
+				MapGenerator.setDiceEntity(zoneId, i, entity);
+				
+			}
+			
+			EntityFactory.getPositionComponent(entity).x = MathUtils.random(480);
+			EntityFactory.getPositionComponent(entity).y = MathUtils.random(800);
+			
+			Vector2 diceXY = MapGenerator.getZoneDicePosition(zoneId, i);
+			
+			EntityFactory.setAlpha(entity, 0f);
+			
+			entity.add(ComponentFactory.getColorAlphaInterpolationComponent(engine, 0f, 1f, 0.5f, Interpolation.EASE_IN));
+			
+			entity.add(ComponentFactory.getPositionInterpolationComponent(
+					engine, 
+					EntityFactory.getPositionComponent(entity), 
+					diceXY.x, 
+					diceXY.y, 
+					0.5f, 
+					Interpolation.EASE_IN
+			));
+			
+		}
+		
+		MapGenerator.increaseZoneDices(zoneId, newDices);
+		
+		
+	}
+	
+	private static PositionComponent getPositionComponent(Entity entity) {
+		
+		return engine.getSystem(TextureRenderingSystem.class).pm.get(entity);
+		
+	}
+	
+	private static void setAlpha(Entity entity, float f) {
+		
+		ColorAlphaComponent alpha = engine.getSystem(TextureRenderingSystem.class).am.get(entity);
+		
+		if (alpha != null) {
+			
+			alpha.setAlpha(f);
+			
+		}
+		
+	}
+
 	public static void decreaseZoneDices(int zoneId, int toRemove) {
 		
 		int i = zoneId;
 		
 		ZoneComponent zone = EntityFactory.getZoneComponentById(i);
+		
+		if (toRemove >= zone.getDices()) {
+			toRemove = zone.getDices() - 1;
+		}
 		
 		PositionComponent prevPosition = null; 
 		
@@ -309,5 +390,19 @@ public class EntityFactory {
 		
 	}
 
+	public static void applyPositionToEntity(Entity to, Entity from) {
+		
+		PositionComponent posTo = EntityFactory.getPositionComponent(to);
+		PositionComponent posFrom = EntityFactory.getPositionComponent(from);
+		
+		posTo.setPosition(posFrom.x, posFrom.y);
+		
+	}
+
+	public static void disposeEntity(Entity entity) {
+		
+		engine.removeEntity(entity);
+		
+	}
 
 }

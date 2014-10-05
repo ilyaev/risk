@@ -1,6 +1,7 @@
 package pbartz.games.risk.commands;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.MathUtils;
 
 import pbartz.games.components.ZoneSelectionComponent;
 import pbartz.games.risk.EntityFactory;
@@ -34,8 +35,8 @@ public class FinishZoneSelectionCommand extends Command {
 			EventBus.setInt("TARGET_ZONE", selection.getTargetZone());
 			
 			
-			EntityFactory.decreaseZoneDices(selection.getSrcZone(), 1);
-			EntityFactory.decreaseZoneDices(selection.getTargetZone(), 2);
+			EntityFactory.decreaseZoneDices(selection.getSrcZone(), MathUtils.random(1, 5));
+			EntityFactory.increaseZoneDices(selection.getTargetZone(), MathUtils.random(1,5));
 			EntityFactory.turnZoneToCountry(selection.getTargetZone(), selection.getSrcZone());
 			
 		}
