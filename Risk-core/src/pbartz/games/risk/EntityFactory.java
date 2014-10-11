@@ -5,13 +5,16 @@ import pbartz.games.components.ColorAlphaComponent;
 import pbartz.games.components.ColorInterpolationComponent;
 import pbartz.games.components.DelayedComponent;
 import pbartz.games.components.PositionComponent;
+import pbartz.games.components.PositionInterpolationComponent;
 import pbartz.games.components.ShapeComponent;
 import pbartz.games.components.TextureComponent;
 import pbartz.games.components.ZoneComponent;
+import pbartz.games.components.UI.ButtonComponent;
 import pbartz.games.factories.ComponentFactory;
 import pbartz.games.systems.BlinkSystem;
 import pbartz.games.systems.ColorInterpolationSystem;
 import pbartz.games.systems.TextureRenderingSystem;
+import pbartz.games.systems.UIButtonSystem;
 import pbartz.games.systems.ZoneSelectionSystem;
 import pbartz.games.utils.Command;
 import pbartz.games.utils.Interpolation;
@@ -25,6 +28,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class EntityFactory {
 	
@@ -39,6 +44,8 @@ public class EntityFactory {
 	private static Pixmap pixmap;
 	private static int color;
 	private static Entity tmpEntity;
+	private static Stage stage;
+	private static Skin skin;
 	
 	public static void init(PooledEngine engine) {
 		
@@ -106,8 +113,8 @@ public class EntityFactory {
 				
 			}
 			
-			EntityFactory.getPositionComponent(entity).x = MathUtils.random(480);
-			EntityFactory.getPositionComponent(entity).y = MathUtils.random(800);
+			EntityFactory.getPositionComponent(entity).x = MathUtils.random(Gdx.graphics.getWidth());
+			EntityFactory.getPositionComponent(entity).y = MathUtils.random(Gdx.graphics.getHeight());
 			
 			Vector2 diceXY = MapGenerator.getZoneDicePosition(zoneId, i);
 			
@@ -115,14 +122,18 @@ public class EntityFactory {
 			
 			entity.add(ComponentFactory.getColorAlphaInterpolationComponent(engine, 0f, 1f, 0.5f, Interpolation.EASE_IN));
 			
-			entity.add(ComponentFactory.getPositionInterpolationComponent(
+			PositionInterpolationComponent pInterpolation = ComponentFactory.getPositionInterpolationComponent(
 					engine, 
 					EntityFactory.getPositionComponent(entity), 
 					diceXY.x, 
 					diceXY.y, 
 					0.5f, 
 					Interpolation.EASE_IN
-			));
+			);
+			
+			EntityFactory.addDelayedComponent(entity, pInterpolation, MathUtils.random() * 0.2f);
+			
+			//entity.add(pInterpolation);
 			
 		}
 		
@@ -404,5 +415,42 @@ public class EntityFactory {
 		engine.removeEntity(entity);
 		
 	}
+	
+	public static Entity createUIButton(String label, float x, float y, float width, float height, String tag) {
+		
+		Entity entity = engine.createEntity();
+		
+		PositionComponent position = engine.createComponent(PositionComponent.class);
+		ButtonComponent button = engine.createComponent(ButtonComponent.class);
+		ShapeComponent shape = engine.createComponent(ShapeComponent.class);
+		
+		position.init(x, y);
+		shape.init(ShapeComponent.SHAPE_RECTANGLE, width, height);		
+		button.init(label, tag, skin);
+		
+		entity.add(position).add(shape).add(button);
+		
+		engine.addEntity(entity);
+		
+		stage.addActor(button.getButton());		
+		
+		engine.getSystem(UIButtonSystem.class).addButton(entity, tag);
+		
+		return entity;
+		
+	}
+	
+	public static Entity getUIButton(String tag) {
+		return engine.getSystem(UIButtonSystem.class).getButton(tag);
+	}
+
+	public static void setStage(Stage stage) {
+		EntityFactory.stage = stage;		
+	}
+
+	public static void setSkin(Skin skin) {
+		EntityFactory.skin = skin;		
+	}
+	
 
 }

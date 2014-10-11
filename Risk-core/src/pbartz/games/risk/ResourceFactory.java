@@ -9,6 +9,10 @@ public class ResourceFactory {
 	private static ObjectMap<String, Texture> cache = new ObjectMap<String, Texture>(); 
 	
 	
+	public static void init() {
+		cache.clear();
+	}
+	
 	public static Texture getTexture(String fileName) {
 		
 		if (cache.get(fileName) == null) {

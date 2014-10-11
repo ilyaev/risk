@@ -2,6 +2,7 @@ package pbartz.games.risk;
 
 import pbartz.games.risk.screens.MainScreen;
 import pbartz.games.risk.screens.SandboxScreen;
+import pbartz.games.risk.screens.UITestScreen;
 
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Game;
@@ -15,6 +16,7 @@ public class RiskGame extends Game {
 	PooledEngine engine;
 	MainScreen mainScreen;
 	SandboxScreen sandboxScreen;
+	UITestScreen uitestScreen;
 	
 	long lastTime;
 	int frames;
@@ -26,10 +28,12 @@ public class RiskGame extends Game {
 		
 		mainScreen = new MainScreen(this);
 		sandboxScreen = new SandboxScreen(this);
+		//uitestScreen = new UITestScreen(this);
 		
 		
 		setScreen(mainScreen);
 		//setScreen(sandboxScreen);
+		//setScreen(uitestScreen);
 		
 	}
 

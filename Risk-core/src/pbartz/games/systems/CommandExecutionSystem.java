@@ -27,7 +27,7 @@ public class CommandExecutionSystem extends DynamicIteratingSystem {
 		
 		command = cm.get(entity);
 		
-		//Gdx.app.log("CMD_EXEC", command.getCmd().toString());
+		Gdx.app.log("CMD_EXEC", command.getCmd().toString());
 		
 		command.getCmd().execute();
 		

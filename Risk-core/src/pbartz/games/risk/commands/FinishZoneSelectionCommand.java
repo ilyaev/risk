@@ -33,11 +33,7 @@ public class FinishZoneSelectionCommand extends Command {
 			EventBus.setString("GAME_STATE", "START_ROLL");
 			EventBus.setInt("SRC_ZONE", selection.getSrcZone());
 			EventBus.setInt("TARGET_ZONE", selection.getTargetZone());
-			
-			
-			EntityFactory.decreaseZoneDices(selection.getSrcZone(), MathUtils.random(1, 5));
-			EntityFactory.increaseZoneDices(selection.getTargetZone(), MathUtils.random(1,5));
-			EntityFactory.turnZoneToCountry(selection.getTargetZone(), selection.getSrcZone());
+
 			
 		}
 		

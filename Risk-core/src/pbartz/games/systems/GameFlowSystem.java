@@ -8,6 +8,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 
 public class GameFlowSystem extends EntitySystem {
 	
@@ -39,19 +40,55 @@ public class GameFlowSystem extends EntitySystem {
 	}
 	
 	public void update(float deltaTime) {
+		
 		processEvents();
 	
 		if (state == START_ROLL) {
 			
-			//EntityFactory.turnZoneToCountry(targetZone, srcCountry);
-			//rollEntity = EntityFactory.createRollEntity(srcEntity, targetEntity);
+			int srcDices = srcZoneCmp.getDices();
+			int targetDices = targetZoneCmp.getDices();
+			
+			int srcRollNumber = 0;
+			int targetRollNumber = 0;
+			
+			for(int i = 0 ; i < srcDices ; i++) {
+				srcRollNumber += MathUtils.random(1, 6);
+			}
+			
+			for(int i = 0 ; i < targetDices ; i++) {
+				targetRollNumber += MathUtils.random(1, 6);
+			}
+			
+			Gdx.app.log("ROLL", String.format("%d (%d) vs. %d (%d)", srcRollNumber, srcDices, targetRollNumber, targetDices));
+			
+			EntityFactory.decreaseZoneDices(srcZone, srcDices - 1);
+			
+			if (srcRollNumber > targetRollNumber) {
+
+				EntityFactory.turnZoneToCountry(targetZone, srcZone);
+				
+				int diff = (srcDices - 1) - targetDices;
+
+				if (diff > 0) {
+					EntityFactory.increaseZoneDices(targetZone, diff);
+				} else if (diff < 0) {
+					EntityFactory.decreaseZoneDices(targetZone, (-1)*diff);
+				}
+				
+			}
+			
+			
+			
+			
+			
+			
 			state = ROLLING;
 			
 		}
 		
 		if (state == ROLLING) {
 			
-			
+			state = WAITING_FOR_SELECT;
 			
 		}
 		
@@ -77,7 +114,7 @@ public class GameFlowSystem extends EntitySystem {
 			//targetCountry = targetEntity.getComponent(ZoneComponent.class).getCountry();
 			
 
-			//state = START_ROLL;			
+			state = START_ROLL;			
 		}
 		
 	}
