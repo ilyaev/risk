@@ -24,8 +24,7 @@ public class FinishZoneSelectionCommand extends Command {
 	public void execute() {
 		
 		EntityFactory.finishBlinkZone(selection.getSrcZone());
-		EntityFactory.finishBlinkZone(selection.getTargetZone());
-		
+		EntityFactory.finishBlinkZone(selection.getTargetZone());		
 		
 		
 		if (selection.getTargetZone() > -1) {

@@ -81,8 +81,8 @@ public class MainScreen implements Screen {
     		"btnEndTurn"
         );
 		
-		EntityFactory.createUIButton("AI2 Turn", 0, Gdx.graphics.getHeight() - 40, 200f, 40f, "btnAITurn2");
-		EntityFactory.createUIButton("AI3 Turn", 0, Gdx.graphics.getHeight() - 85, 200f, 40f, "btnAITurn3");
+		//EntityFactory.createUIButton("AI2 Turn", 0, Gdx.graphics.getHeight() - 40, 200f, 40f, "btnAITurn2");
+		//EntityFactory.createUIButton("AI3 Turn", 0, Gdx.graphics.getHeight() - 85, 200f, 40f, "btnAITurn3");
 		
 	}
 
@@ -141,6 +141,8 @@ public class MainScreen implements Screen {
 		engine.addSystem(new UILabelSystem());
 		
 		EntityFactory.init(engine);
+		EntityFactory.initPallete();
+		
 		ResourceFactory.init();
 		
 		MapGenerator map = new MapGenerator(Metrics.cellsH, Metrics.cellsV, Metrics.cellSize);

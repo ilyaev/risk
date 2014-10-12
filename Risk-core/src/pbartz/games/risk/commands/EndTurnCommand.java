@@ -1,5 +1,6 @@
 package pbartz.games.risk.commands;
 
+import pbartz.games.risk.EntityFactory;
 import pbartz.games.risk.MapGenerator;
 import pbartz.games.utils.Command;
 
@@ -21,6 +22,20 @@ public class EndTurnCommand extends Command {
 		if (toAdd > 0) {
 			MapGenerator.distributeDicesToCountry(toAdd, country);
 		}
+		
+		country += 1;
+		
+		if (country > MapGenerator.getCountriesCount()) {
+			
+			country = 1;
+			
+		}
+		
+		//if (country > 1) {
+			
+			EntityFactory.addCommand(new AITurnCommand(country), 0.5f);
+			
+		//}
 		
 	}
 

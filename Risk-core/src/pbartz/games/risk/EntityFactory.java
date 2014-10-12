@@ -34,6 +34,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.ObjectMap;
 
 public class EntityFactory {
 	
@@ -52,11 +54,42 @@ public class EntityFactory {
 	private static Skin skin;
 	public static ZoneSelectionComponent currentZoneSelectionComponent;
 	public static Entity currentZoneSelectionEntity;
+	private static ColorPalletes palleteMap;
 	
 	public static void init(PooledEngine engine) {
 		
 		EntityFactory.engine = engine;
 		EntityFactory.isPaintInited = false;
+		
+		Json json = new Json();
+		
+		palleteMap = json.fromJson(ColorPalletes.class, Gdx.files.internal("colors.json"));
+	
+	}
+	
+	public static void initPallete() {
+		
+			int colorId = MathUtils.random(palleteMap.colors.size() - 1);
+			
+			String hash = palleteMap.colors.get(colorId).c;
+			String[] colors = hash.split("\\|");
+			
+			paints[0] = new Color();
+			paints[0].set(0, 0, 0, 0);
+			
+			for(int i = 0 ; i < colors.length ; i++) {
+				
+				paints[i + 1] = new Color();
+				
+				String[] components = colors[i].split(",");
+				int r = Integer.parseInt(components[0]);
+				int g = Integer.parseInt(components[1]);
+				int b = Integer.parseInt(components[2]);
+				
+				paints[i + 1].set(r/255f, g/255f, b/255f, 1f);
+				
+			}
+			
 		
 	}
 	
@@ -216,32 +249,7 @@ public class EntityFactory {
 		
 	}
 	
-	public static Color getColorByZone(int zone) {
-		
-		if (!isPaintInited ) {
-			
-			paints[0] = new Color();
-			paints[0].set(0, 0, 0, 0);
-			
-			paints[1] = new Color();
-			paints[1].set(183f/255f, 209f/255f, 245f/255f, 1f);
-			
-			paints[2] = new Color();
-			paints[2].set(117f / 255f, 101f / 255f, 169f / 255f, 1f);
-			
-			paints[3] = new Color();
-			paints[3].set(55f / 255f, 48f / 255f, 107f / 255f, 1f);
-			
-			for(int i = 4 ; i < 300 ; i++) {
-				
-				paints[i] = new Color();
-				paints[i].set(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1f);
-				
-			}
-			
-			isPaintInited = true;
-			
-		}
+	public static Color getColorByZone(int zone) {		
 		
 		return paints[zone];
 		
@@ -340,8 +348,7 @@ public class EntityFactory {
 		engine.addEntity(entity);
 		
 		currentZoneSelectionEntity = entity;
-		
-		
+				
 		
 	}
 

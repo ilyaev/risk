@@ -8,6 +8,7 @@ import pbartz.games.components.ZoneComponent;
 import pbartz.games.factories.ComponentFactory;
 import pbartz.games.risk.EntityFactory;
 import pbartz.games.risk.GameInputProcessor;
+import pbartz.games.risk.MapGenerator;
 import pbartz.games.risk.commands.MoveZoneSelectionCommand;
 import pbartz.games.risk.commands.StartZoneSelectionCommand;
 import pbartz.games.utils.Command;
@@ -35,8 +36,6 @@ public class ZoneTouchSystem extends DynamicIteratingSystem {
 	private TouchComponent touch;
 	private TextureComponent texture;
 	private PositionComponent position;
-	private PooledEngine engine;
-	private int colorCode;
 	private Color color;
 	private ColorAlphaComponent alpha;
 	
@@ -45,7 +44,6 @@ public class ZoneTouchSystem extends DynamicIteratingSystem {
 	@SuppressWarnings("unchecked")
 	public ZoneTouchSystem(PooledEngine engine) {
 		super(Family.getFor(ZoneComponent.class, TouchComponent.class));
-		this.engine = engine;
 		this.color = new Color();
 	}
 
@@ -99,6 +97,41 @@ public class ZoneTouchSystem extends DynamicIteratingSystem {
 		}
 
 
+	}
+	
+	public int getZoneIdByCoords(int x, int y) {
+		
+		int oldX = GameInputProcessor.screenX;
+		int oldY = GameInputProcessor.screenY;
+		int res = 0;
+		
+		GameInputProcessor.screenX = x;
+		GameInputProcessor.screenY = y;
+		
+		for(int zoneId = 1 ; zoneId <= MapGenerator.getZonesCount() ; zoneId ++) {
+			
+			Entity entity = MapGenerator.getZoneEntity(zoneId);
+			
+			zone = zm.get(entity);
+			touch = tm.get(entity);
+			texture = tem.get(entity);
+			position = pm.get(entity);
+			alpha = am.get(entity);
+			
+			rect = texture.getRect();
+			rect.setCenter(position.x, position.y);
+			
+			if (isIntersect() && isZoneHit()) {
+				res = zoneId;
+				break;
+			}
+			
+		}
+		
+		GameInputProcessor.screenX = oldX;
+		GameInputProcessor.screenY = oldY;
+		
+		return res;
 	}
 	
 	private boolean isZoneHit() {

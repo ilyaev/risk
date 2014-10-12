@@ -1,11 +1,14 @@
 package pbartz.games.risk.commands;
 
+import pbartz.games.components.PositionComponent;
 import pbartz.games.components.ZoneComponent;
+import pbartz.games.factories.ComponentFactory;
 import pbartz.games.risk.EntityFactory;
 import pbartz.games.risk.MapGenerator;
 import pbartz.games.systems.ZoneSelectionSystem;
 import pbartz.games.utils.Command;
 import pbartz.games.utils.HexCell;
+import pbartz.games.utils.Interpolation;
 
 public class AITurnCommand extends Command {
 	
@@ -21,7 +24,7 @@ public class AITurnCommand extends Command {
 		int targetZoneId = 0;
 		int srcZoneId = 0;
 		
-		for(int i = 1 ; i < MapGenerator.getZonesCount() ; i++) {
+		for(int i = 1 ; i <= MapGenerator.getZonesCount() ; i++) {
 			
 			ZoneComponent zone = EntityFactory.getZoneComponentById(i);
 			
@@ -55,13 +58,37 @@ public class AITurnCommand extends Command {
 			EntityFactory.addCommand(new StartZoneSelectionCommand(country, srcZoneId), true);
 			
 			HexCell targetCapital = MapGenerator.getCapitalHex(targetZoneId);
+			HexCell srcCapital = MapGenerator.getCapitalHex(srcZoneId);
 			
-			EntityFactory.addCommand(new MoveZoneSelectionCommand(targetZoneId, (int)targetCapital.getCoordX(MapGenerator.cSize), (int)targetCapital.getCoordY(MapGenerator.cSize)), true);
+			EntityFactory.addCommand(new MoveZoneSelectionCommand(
+					targetZoneId, 
+					(int)srcCapital.getCoordX(MapGenerator.cSize), 
+					(int)srcCapital.getCoordY(MapGenerator.cSize)
+			), true);
+			
+			
+			PositionComponent arrowStartPosition = ComponentFactory.getPositionComponent(
+					EntityFactory.getEngine(), 
+					(int)srcCapital.getCoordX(MapGenerator.cSize), 
+					(int)srcCapital.getCoordY(MapGenerator.cSize)
+			);
+			
+			EntityFactory.currentZoneSelectionEntity.add(arrowStartPosition);
+			
+			EntityFactory.currentZoneSelectionEntity.add(ComponentFactory.getPositionInterpolationComponent(
+					EntityFactory.getEngine(),  
+					arrowStartPosition, 
+					(int)targetCapital.getCoordX(MapGenerator.cSize), 
+					(int)targetCapital.getCoordY(MapGenerator.cSize),
+					0.5f, 
+					Interpolation.EASE_OUT
+			));
 			
 			EntityFactory.addCommand(new FinishZoneSelectionCommand(
 				EntityFactory.currentZoneSelectionComponent,
 				EntityFactory.currentZoneSelectionEntity
-			), 0.5f);
+			), 0.7f);
+			
 			
 		} else {
 			

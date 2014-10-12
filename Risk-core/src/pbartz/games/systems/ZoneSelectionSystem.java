@@ -1,6 +1,7 @@
 package pbartz.games.systems;
 
 import pbartz.games.components.ArrowComponent;
+import pbartz.games.components.PositionComponent;
 import pbartz.games.components.ZoneComponent;
 import pbartz.games.components.ZoneSelectionComponent;
 import pbartz.games.risk.EntityFactory;
@@ -21,10 +22,12 @@ public class ZoneSelectionSystem extends DynamicIteratingSystem {
 	private ComponentMapper<ZoneSelectionComponent> sm = ComponentMapper.getFor(ZoneSelectionComponent.class);
 	private ComponentMapper<ArrowComponent> am = ComponentMapper.getFor(ArrowComponent.class);
 	public ComponentMapper<ZoneComponent> zm = ComponentMapper.getFor(ZoneComponent.class);
-
+	private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
+ 
 	private ArrowComponent arrow;
 	private ZoneSelectionComponent selection;
 	private Entity selectionEntity;
+	private PositionComponent position;
 	
 	@SuppressWarnings("unchecked")
 	public ZoneSelectionSystem() {
@@ -43,6 +46,7 @@ public class ZoneSelectionSystem extends DynamicIteratingSystem {
 	public void processEntity(Entity entity, float deltaTime) {
 		
 		arrow = am.get(entity);
+		position = pm.get(entity);
 		
 		selection = sm.get(entity);
 		
@@ -58,9 +62,12 @@ public class ZoneSelectionSystem extends DynamicIteratingSystem {
 		int targetPointX = EventBus.popInt("hover_x");
 		int targetPointY = EventBus.popInt("hover_y");		
 		
-		if (zoneHover > 0) {
-		
-			Gdx.app.log("ZSL", String.format("zone_hover: %d, hover_x: %d, hover_y: %d", zoneHover, targetPointX, targetPointY));
+		if (zoneHover == 0 && position != null) {
+			
+			targetPointX = (int)position.x;
+			targetPointY = (int)position.y;
+			
+			zoneHover = EntityFactory.getEngine().getSystem(ZoneTouchSystem.class).getZoneIdByCoords(targetPointX, targetPointY);
 			
 		}
 		

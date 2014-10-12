@@ -25,8 +25,8 @@ public class MapGenerator {
 	int cellWidth = 0;
 	int mapWidth = 0;
 	int mapHeight = 0;
-	static int zonesCount = 21;
-	int countryCount = 3;
+	static int zonesCount = 40;
+	static int countryCount = 5;
 	
 	public static int cSize = 0;
 	
@@ -60,6 +60,12 @@ public class MapGenerator {
 		dices = new Entity[zonesCount + 1][16];
 		
 		createWorld();
+		
+	}
+	
+	public static int getCountriesCount() {
+		
+		return countryCount;
 		
 	}
 	
@@ -320,7 +326,7 @@ public class MapGenerator {
 			
 			createStacks((int)srcPointX, (int)srcPointY, zone.getDices(), i);
 			
-			EntityFactory.createUILabel(Integer.toString(i), srcPointX - 15f, srcPointY, 1f, 1f, 1f, 1f, "lbZone_" + Integer.toString(i));
+			//EntityFactory.createUILabel(Integer.toString(i), srcPointX - 15f, srcPointY, 1f, 1f, 1f, 1f, "lbZone_" + Integer.toString(i));
 			
 		}
 		
@@ -620,7 +626,7 @@ public class MapGenerator {
 		
 		int maxTotalNbs = 0;
 		
-		for(int zoneId = 1 ; zoneId < getZonesCount() ; zoneId++) {
+		for(int zoneId = 1 ; zoneId <= getZonesCount() ; zoneId++) {
 			
 			zone = EntityFactory.getZoneComponentById(zoneId);
 			
@@ -646,7 +652,7 @@ public class MapGenerator {
 		
 		tmpZones.clear();
 		
-		for(int i = 1 ; i < getZonesCount() ; i++) {
+		for(int i = 1 ; i <= getZonesCount() ; i++) {
 			
 			if (EntityFactory.getZoneComponentById(i).getCountry() == country) {
 				if (EntityFactory.getZoneComponentById(i).getDices() < 8) {

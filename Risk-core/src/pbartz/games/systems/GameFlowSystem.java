@@ -2,6 +2,7 @@ package pbartz.games.systems;
 
 import pbartz.games.components.ZoneComponent;
 import pbartz.games.risk.EntityFactory;
+import pbartz.games.risk.commands.AITurnCommand;
 import pbartz.games.utils.EventBus;
 
 import com.badlogic.ashley.core.ComponentMapper;
@@ -77,6 +78,11 @@ public class GameFlowSystem extends EntitySystem {
 				
 			}
 			
+			//if (srcZoneCmp.getCountry() > 1) {
+				
+				EntityFactory.addCommand(new AITurnCommand(srcZoneCmp.getCountry()), 0.5f);
+				
+			//}
 			
 			state = ROLLING;
 			
