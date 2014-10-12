@@ -26,14 +26,24 @@ public class BtnPressedCommand extends Command {
 		
 		if (entity != null) {
 			
-			entity.add(ComponentFactory.getPositionInterpolationComponent(
-				EntityFactory.getEngine(), 
-				EntityFactory.getEntityPositionComponent(entity), 
-				MathUtils.random() * Gdx.graphics.getWidth(), 
-				MathUtils.random() * Gdx.graphics.getHeight(),
-				MathUtils.random() * 2, 
-				Interpolation.EASE_OUT
-			));
+			if (tag.equalsIgnoreCase("btnEndTurn")) {
+				
+				EntityFactory.addCommand(new EndTurnCommand(1));
+				
+			}
+			
+			if (tag.equalsIgnoreCase("btnAITurn2")) {
+				
+				EntityFactory.addCommand(new AITurnCommand(2));
+				
+			}
+			
+			if (tag.equalsIgnoreCase("btnAITurn3")) {
+				
+				EntityFactory.addCommand(new AITurnCommand(3));
+				
+			}
+
 			
 		}
 		

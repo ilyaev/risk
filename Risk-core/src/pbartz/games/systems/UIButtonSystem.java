@@ -32,14 +32,20 @@ public class UIButtonSystem extends DynamicIteratingSystem {
 		position = pm.get(entity);
 		shape = sm.get(entity);
 		
-		if (shape.getrWidth() != button.getButton().getWidth() || shape.getrHeight() != button.getButton().getHeight()  ) {
-			
-			button.getButton().setSize(shape.getrWidth(), shape.getrHeight());
-			
-		}
-		
+		button.getButton().setSize(shape.getrWidth(), shape.getrHeight());
+
 		button.getButton().setPosition(position.x, position.y);
 		
+	}
+	
+	public void removeButton(String tag) {
+		Entity entity = getButton(tag);
+		
+		if (entity != null) {
+			
+			bm.get(entity).getButton().remove();
+			
+		}
 	}
 	
 	public void addButton(Entity entity, String tag) {

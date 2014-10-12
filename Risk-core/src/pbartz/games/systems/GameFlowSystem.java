@@ -78,10 +78,6 @@ public class GameFlowSystem extends EntitySystem {
 			}
 			
 			
-			
-			
-			
-			
 			state = ROLLING;
 			
 		}

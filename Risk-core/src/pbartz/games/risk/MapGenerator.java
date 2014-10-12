@@ -39,6 +39,8 @@ public class MapGenerator {
 	private static Entity dices[][];
 	private static Vector2 tmpVector2 = new Vector2();
 	
+	private static Array<Integer> tmpZones = new Array<Integer>();
+	
 	public MapGenerator(int cellsH, int cellsV, int cellSize) {
 		
 		this.cellsH = cellsH;
@@ -318,6 +320,8 @@ public class MapGenerator {
 			
 			createStacks((int)srcPointX, (int)srcPointY, zone.getDices(), i);
 			
+			EntityFactory.createUILabel(Integer.toString(i), srcPointX - 15f, srcPointY, 1f, 1f, 1f, 1f, "lbZone_" + Integer.toString(i));
+			
 		}
 		
 	}
@@ -577,6 +581,93 @@ public class MapGenerator {
 	public static void increaseZoneDices(int zoneId, int newDices) {
 		
 		EntityFactory.getZoneComponentById(zoneId).setDices(newDices);
+		
+	}
+	
+	public static int getSameZones(int zoneId, int country) {
+		int res = 0;
+		
+		if (!tmpZones.contains(zoneId, true)) {
+		
+			tmpZones.add(zoneId);
+			res += 1;
+		}
+		
+		ZoneComponent zone = EntityFactory.getZoneComponentById(zoneId);
+		
+		for(int i = 0 ; i < zone.getNeigbors().size ; i++) {
+			
+			int nbZoneId = zone.getNeigbors().get(i);
+			ZoneComponent nbZone = EntityFactory.getZoneComponentById(nbZoneId);
+			
+			if (nbZone.getCountry() != country) continue;
+			
+			
+			
+			if (!tmpZones.contains(nbZoneId, true)) {
+
+				res += getSameZones(nbZoneId, country);				
+			}
+			
+		}
+		
+		return res;
+	}
+
+	public static int getCountryAdjustedZonesCount(int country) {
+		
+		ZoneComponent zone;
+		
+		int maxTotalNbs = 0;
+		
+		for(int zoneId = 1 ; zoneId < getZonesCount() ; zoneId++) {
+			
+			zone = EntityFactory.getZoneComponentById(zoneId);
+			
+			if (zone.getCountry() != country) continue;
+			
+			tmpZones.clear();
+			
+			int totalNbs = getSameZones(zoneId, country);
+			
+			if (totalNbs > maxTotalNbs) {
+				maxTotalNbs = totalNbs;
+			}
+			
+			Gdx.app.log("ZC", String.format("ZoneID: %d, adjustents: %d", zoneId, totalNbs));
+			
+			
+		}
+		
+		return maxTotalNbs;
+	}
+
+	public static void distributeDicesToCountry(int toAdd, int country) {
+		
+		tmpZones.clear();
+		
+		for(int i = 1 ; i < getZonesCount() ; i++) {
+			
+			if (EntityFactory.getZoneComponentById(i).getCountry() == country) {
+				if (EntityFactory.getZoneComponentById(i).getDices() < 8) {
+					tmpZones.add(i);
+				}
+				
+			}
+			
+		}
+		
+		if (tmpZones.size == 0) return;
+		
+		for(int i = 0 ; i < toAdd ; i++) {
+			
+			int rndZone = MathUtils.random(0, tmpZones.size - 1);
+			
+			Gdx.app.log("IZ", String.format("Increase zone: %d", tmpZones.get(rndZone)));
+			
+			EntityFactory.increaseZoneDices(tmpZones.get(rndZone), 1);
+			
+		}
 		
 	}
 

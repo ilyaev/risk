@@ -2,6 +2,7 @@ package pbartz.games.risk;
 
 import pbartz.games.components.BlinkComponent;
 import pbartz.games.components.ColorAlphaComponent;
+import pbartz.games.components.ColorComponent;
 import pbartz.games.components.ColorInterpolationComponent;
 import pbartz.games.components.DelayedComponent;
 import pbartz.games.components.PositionComponent;
@@ -9,12 +10,15 @@ import pbartz.games.components.PositionInterpolationComponent;
 import pbartz.games.components.ShapeComponent;
 import pbartz.games.components.TextureComponent;
 import pbartz.games.components.ZoneComponent;
+import pbartz.games.components.ZoneSelectionComponent;
 import pbartz.games.components.UI.ButtonComponent;
+import pbartz.games.components.UI.LabelComponent;
 import pbartz.games.factories.ComponentFactory;
 import pbartz.games.systems.BlinkSystem;
 import pbartz.games.systems.ColorInterpolationSystem;
 import pbartz.games.systems.TextureRenderingSystem;
 import pbartz.games.systems.UIButtonSystem;
+import pbartz.games.systems.UILabelSystem;
 import pbartz.games.systems.ZoneSelectionSystem;
 import pbartz.games.utils.Command;
 import pbartz.games.utils.Interpolation;
@@ -46,6 +50,8 @@ public class EntityFactory {
 	private static Entity tmpEntity;
 	private static Stage stage;
 	private static Skin skin;
+	public static ZoneSelectionComponent currentZoneSelectionComponent;
+	public static Entity currentZoneSelectionEntity;
 	
 	public static void init(PooledEngine engine) {
 		
@@ -271,6 +277,22 @@ public class EntityFactory {
 		
 	}
 	
+	public static void addCommand(Command cmd, float delay) {
+		
+		Entity entity = engine.createEntity();
+		cmd.engine = engine;
+		entity.add(ComponentFactory.getCommandComponent(engine, cmd));
+		
+		EntityFactory.addDelayedComponent(entity, null, delay);
+		
+	}
+	
+	public static void addCommand(Command cmd, boolean execute) {
+		
+		cmd.execute();
+		
+	}
+	
 	public static void startBlinkZone(int zoneId, int syncZone) {
 		
 		Entity entity = EntityFactory.getZoneEntityById(zoneId);
@@ -310,10 +332,16 @@ public class EntityFactory {
 
 		Entity entity = engine.createEntity();
 		
-		entity.add(ComponentFactory.getZoneSelectionComponent(engine, srcZone));
+		currentZoneSelectionComponent = ComponentFactory.getZoneSelectionComponent(engine, srcZone);
+		
+		entity.add(currentZoneSelectionComponent);
 		entity.add(ComponentFactory.getArrowComponent(engine, -100, -100, -100, -100));
 		
 		engine.addEntity(entity);
+		
+		currentZoneSelectionEntity = entity;
+		
+		
 		
 	}
 
@@ -416,6 +444,27 @@ public class EntityFactory {
 		
 	}
 	
+	public static Entity createUILabel(String caption, float x, float y, float r, float g, float b, float a, String tag) {
+		
+		Entity entity = engine.createEntity();
+		
+		ColorComponent color = ComponentFactory.getColorComponent(engine, r, g, b, a);
+		PositionComponent position = ComponentFactory.getPositionComponent(engine, x, y);
+		LabelComponent label = engine.createComponent(LabelComponent.class);
+		
+		label.init(caption, tag, skin);
+		
+		entity.add(position).add(color).add(label);
+		engine.getSystem(UILabelSystem.class).addLabel(entity, tag);
+		
+		engine.addEntity(entity);		
+		
+		stage.addActor(label.getLabel());
+		
+		return entity;
+		
+	}
+	
 	public static Entity createUIButton(String label, float x, float y, float width, float height, String tag) {
 		
 		Entity entity = engine.createEntity();
@@ -450,6 +499,10 @@ public class EntityFactory {
 
 	public static void setSkin(Skin skin) {
 		EntityFactory.skin = skin;		
+	}
+	
+	public static Skin getSkin() {
+		return EntityFactory.skin;
 	}
 	
 

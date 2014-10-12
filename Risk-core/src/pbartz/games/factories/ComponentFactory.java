@@ -39,7 +39,7 @@ public class ComponentFactory {
 		
 	}
 	
-	public static PositionComponent getPositionComponent(PooledEngine engine, int pX, int pY) {
+	public static PositionComponent getPositionComponent(PooledEngine engine, float pX, float pY) {
 		
 		PositionComponent position = engine.createComponent(PositionComponent.class);
 		position.init(pX, pY);

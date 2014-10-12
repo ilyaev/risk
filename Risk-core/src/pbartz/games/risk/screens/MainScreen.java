@@ -17,6 +17,7 @@ import pbartz.games.systems.PositionInterpolationSystem;
 import pbartz.games.systems.ShapeRenderingSystem;
 import pbartz.games.systems.TextureRenderingSystem;
 import pbartz.games.systems.UIButtonSystem;
+import pbartz.games.systems.UILabelSystem;
 import pbartz.games.systems.ZoneSelectionSystem;
 import pbartz.games.systems.ZoneTouchSystem;
 import pbartz.games.utils.Metrics;
@@ -66,24 +67,22 @@ public class MainScreen implements Screen {
 		
 
 		
-		game.calcFPS();
+		//game.calcFPS();
 	}
 	
 	private void initUI() {
 		
-		for(int i = 0 ; i < 150 ; i++) {
-        
-	        EntityFactory.createUIButton(
-	    		"End Turn " + Integer.toString(MathUtils.random(10000)), 
-	    		MathUtils.random() * Gdx.graphics.getWidth(), 
-	    		MathUtils.random() * Gdx.graphics.getHeight(), 
-	    		200f, 
-	    		40f, 
-	    		"btnEndTurn_" + Integer.toString(MathUtils.random(10000))
-	        );
-	        
-		}
-
+		EntityFactory.createUIButton(
+    		"End Turn", 
+    		Gdx.graphics.getWidth() - 200f, 
+    		Gdx.graphics.getHeight() - 40f, 
+    		200f, 
+    		40f, 
+    		"btnEndTurn"
+        );
+		
+		EntityFactory.createUIButton("AI2 Turn", 0, Gdx.graphics.getHeight() - 40, 200f, 40f, "btnAITurn2");
+		EntityFactory.createUIButton("AI3 Turn", 0, Gdx.graphics.getHeight() - 85, 200f, 40f, "btnAITurn3");
 		
 	}
 
@@ -118,6 +117,12 @@ public class MainScreen implements Screen {
 
 	private void initScreen() {
 		
+		skin = new Skin(Gdx.files.internal("uiskin.json"));
+        stage = new Stage();
+        
+        EntityFactory.setStage(stage);
+        EntityFactory.setSkin(skin);
+		
 		engine  = new PooledEngine();
 		
 		engine.addSystem(new ShapeRenderingSystem());
@@ -133,6 +138,7 @@ public class MainScreen implements Screen {
 		engine.addSystem(new GameFlowSystem());
 		engine.addSystem(new DelayedComponentSystem(engine));
 		engine.addSystem(new UIButtonSystem());
+		engine.addSystem(new UILabelSystem());
 		
 		EntityFactory.init(engine);
 		ResourceFactory.init();
@@ -141,11 +147,7 @@ public class MainScreen implements Screen {
 		map.generate(engine);
 		
 		
-		skin = new Skin(Gdx.files.internal("uiskin.json"));
-        stage = new Stage();
-        
-        EntityFactory.setStage(stage);
-        EntityFactory.setSkin(skin);
+		
 		
 		initUI();
 		

@@ -22,19 +22,31 @@ public class ZoneSelectionSystem extends DynamicIteratingSystem {
 	private ComponentMapper<ArrowComponent> am = ComponentMapper.getFor(ArrowComponent.class);
 	public ComponentMapper<ZoneComponent> zm = ComponentMapper.getFor(ZoneComponent.class);
 
-	ArrowComponent arrow;
-	ZoneSelectionComponent selection;
+	private ArrowComponent arrow;
+	private ZoneSelectionComponent selection;
+	private Entity selectionEntity;
 	
 	@SuppressWarnings("unchecked")
 	public ZoneSelectionSystem() {
 		super(Family.getFor(ZoneSelectionComponent.class, ArrowComponent.class));
 	}
 
+	public ZoneSelectionComponent getCurrentSelectionComponent() {
+		return selection;
+	}
+	
+	public Entity getCurrentSelectionEntity() {
+		return selectionEntity;
+	}
+	
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
 		
 		arrow = am.get(entity);
+		
 		selection = sm.get(entity);
+		
+		selectionEntity = entity;
 		
 		HexCell srcHex = MapGenerator.getCapitalHex(selection.getSrcZone());
 		
@@ -45,6 +57,12 @@ public class ZoneSelectionSystem extends DynamicIteratingSystem {
 		
 		int targetPointX = EventBus.popInt("hover_x");
 		int targetPointY = EventBus.popInt("hover_y");		
+		
+		if (zoneHover > 0) {
+		
+			Gdx.app.log("ZSL", String.format("zone_hover: %d, hover_x: %d, hover_y: %d", zoneHover, targetPointX, targetPointY));
+			
+		}
 		
 		
 		if (zoneHover > 0 && selection.getTargetZone() != zoneHover) {
