@@ -47,5 +47,10 @@ public class ButtonComponent  extends Component implements Poolable {
 			button.remove();
 		}
 	}
+
+	public void setCaption(String caption) {
+		button.setText(caption);
+		
+	}
 	
 }

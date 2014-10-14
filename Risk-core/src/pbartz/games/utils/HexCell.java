@@ -43,7 +43,7 @@ public class HexCell {
 	}
 
 	public float getCoordY(int cellSize) {
-		return cellSize * 3/2 * r;
+		return cellSize * 3/2 * r + Metrics.controlPanelHeight - cellSize / 2f;
 	}
 	
 	public static int getNeighborX(int direction) {

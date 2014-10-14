@@ -1,7 +1,10 @@
 package pbartz.games.risk.commands;
 
+import com.badlogic.ashley.core.Entity;
+
 import pbartz.games.risk.EntityFactory;
 import pbartz.games.risk.MapGenerator;
+import pbartz.games.systems.UIButtonSystem;
 import pbartz.games.utils.Command;
 
 public class EndTurnCommand extends Command {
@@ -32,6 +35,9 @@ public class EndTurnCommand extends Command {
 		}
 		
 		//if (country > 1) {
+		
+			Entity imgEntity = EntityFactory.getEngine().getSystem(UIButtonSystem.class).getButton("IMG_PLAYER");
+			EntityFactory.getEngine().getSystem(UIButtonSystem.class).bm.get(imgEntity).setCaption(Integer.toString(country));
 			
 			EntityFactory.addCommand(new AITurnCommand(country), 0.5f);
 			

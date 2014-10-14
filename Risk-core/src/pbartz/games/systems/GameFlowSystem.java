@@ -62,6 +62,8 @@ public class GameFlowSystem extends EntitySystem {
 			
 			Gdx.app.log("ROLL", String.format("%d (%d) vs. %d (%d)", srcRollNumber, srcDices, targetRollNumber, targetDices));
 			
+			EntityFactory.setTurnInfoText(String.format("%d (%d) vs. %d (%d)", srcRollNumber, srcDices, targetRollNumber, targetDices));
+			
 			EntityFactory.decreaseZoneDices(srcZone, srcDices - 1);
 			
 			if (srcRollNumber > targetRollNumber) {
@@ -111,9 +113,6 @@ public class GameFlowSystem extends EntitySystem {
 			targetZoneCmp = EntityFactory.getZoneComponentById(targetZone);
 			
 			Gdx.app.log("START", String.format("START_ROLL: %d to %d", srcZone, targetZone));
-			
-			//srcCountry = srcEntity.getComponent(ZoneComponent.class).getCountry();
-			//targetCountry = targetEntity.getComponent(ZoneComponent.class).getCountry();
 			
 
 			state = START_ROLL;			

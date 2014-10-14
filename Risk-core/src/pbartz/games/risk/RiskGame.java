@@ -1,5 +1,6 @@
 package pbartz.games.risk;
 
+import pbartz.games.risk.screens.HUDScreen;
 import pbartz.games.risk.screens.MainScreen;
 import pbartz.games.risk.screens.SandboxScreen;
 import pbartz.games.risk.screens.UITestScreen;
@@ -17,6 +18,7 @@ public class RiskGame extends Game {
 	MainScreen mainScreen;
 	SandboxScreen sandboxScreen;
 	UITestScreen uitestScreen;
+	HUDScreen hudScreen;
 	
 	long lastTime;
 	int frames;
@@ -27,8 +29,11 @@ public class RiskGame extends Game {
 		frames = 0;		
 		
 		mainScreen = new MainScreen(this);
-		sandboxScreen = new SandboxScreen(this);
+		//sandboxScreen = new SandboxScreen(this);
 		//uitestScreen = new UITestScreen(this);
+		
+		//hudScreen = new HUDScreen(this);
+		//setScreen(hudScreen);
 		
 		
 		setScreen(mainScreen);

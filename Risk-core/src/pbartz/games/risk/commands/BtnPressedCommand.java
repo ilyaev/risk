@@ -31,18 +31,6 @@ public class BtnPressedCommand extends Command {
 				EntityFactory.addCommand(new EndTurnCommand(1));
 				
 			}
-			
-			if (tag.equalsIgnoreCase("btnAITurn2")) {
-				
-				EntityFactory.addCommand(new AITurnCommand(2));
-				
-			}
-			
-			if (tag.equalsIgnoreCase("btnAITurn3")) {
-				
-				EntityFactory.addCommand(new AITurnCommand(3));
-				
-			}
 
 			
 		}

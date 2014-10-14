@@ -2,10 +2,8 @@ package pbartz.games.risk.screens;
 
 import pbartz.games.risk.EntityFactory;
 import pbartz.games.risk.GameInputProcessor;
-import pbartz.games.risk.MapGenerator;
 import pbartz.games.risk.ResourceFactory;
 import pbartz.games.risk.RiskGame;
-import pbartz.games.risk.commands.EndTurnCommand;
 import pbartz.games.systems.ArrowRenderingSystem;
 import pbartz.games.systems.BlinkSystem;
 import pbartz.games.systems.ColorAlphaInterpolationSystem;
@@ -27,89 +25,22 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-public class MainScreen implements Screen {
-	
-	 private Skin skin;
-	 private Stage stage;
+public class HUDScreen implements Screen {
 	
 	RiskGame game;
-	private PooledEngine engine = null;
+	private Skin skin;
+	private Stage stage;
+	private PooledEngine engine;
+	private Table container;
 	
-	public MainScreen(RiskGame game) {
+	public HUDScreen(RiskGame game) {
 		this.game = game;
-	}
-
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		engine.getSystem(ShapeRenderingSystem.class).startRendering();
-		engine.getSystem(TextureRenderingSystem.class).startRendering();
-		
-		engine.update(Gdx.graphics.getRawDeltaTime());
-		
-		engine.getSystem(ShapeRenderingSystem.class).endRendering();
-		engine.getSystem(TextureRenderingSystem.class).endRendering();		
-		
-		engine.getSystem(TextureRenderingSystem.class).startRendering();
-		
-		stage.draw();
-		
-        engine.getSystem(TextureRenderingSystem.class).endRendering();	
-		
-
-		
-		//game.calcFPS();
-	}
-	
-	private void initUI() {
-		
-		int panelHeight = 100;
-		int eturnBtnWidth = 150;
-		int labelX = 100;
-		int labelY = 37;
-		
-		Table container = new Table();
-		container.setHeight(panelHeight);
-		container.setWidth(Gdx.graphics.getWidth());
-		container.setPosition(0, 0);
-		
-		stage.addActor(container);
-
-		
-		Table table = new Table();
-
-		final ScrollPane scroll = new ScrollPane(table, skin);
-		
-		container.add(scroll).expand().fill();
-		
-		EntityFactory.createUILabel("Your Turn", labelX, labelY, 1, 1, 1, 1, "LABEL_TURN_INFO");
-		EntityFactory.createUIButton("1", 25, 25, 50, 50, "IMG_PLAYER");
-		EntityFactory.createUIButton(
-				"End Turn",
-				Gdx.graphics.getWidth() - eturnBtnWidth - 25, 
-				25, 
-				eturnBtnWidth, 
-				50, 
-				"btnEndTurn"
-		);
-		
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -163,15 +94,69 @@ public class MainScreen implements Screen {
 		EntityFactory.init(engine);
 		EntityFactory.initPallete();
 		
-		ResourceFactory.init();
-		
-		MapGenerator map = new MapGenerator(Metrics.cellsH, Metrics.cellsV, Metrics.cellSize);
-		map.generate(engine);
-		
-		
-		
+		ResourceFactory.init();		
 		
 		initUI();
+		
+	}
+
+	private void initUI() {
+		
+		int panelHeight = 100;
+		int eturnBtnWidth = 150;
+		int labelX = 100;
+		int labelY = 37;
+		
+		container = new Table();
+		container.setHeight(panelHeight);
+		container.setWidth(Gdx.graphics.getWidth());
+		container.setPosition(0, 0);
+		
+		stage.addActor(container);
+
+		
+		Table table = new Table();
+
+		final ScrollPane scroll = new ScrollPane(table, skin);
+		
+		container.add(scroll).expand().fill();
+		
+		EntityFactory.createUILabel("256 vs. 124", labelX, labelY, 1, 1, 1, 1, "Your Turn");
+		EntityFactory.createUIButton("COL", 25, 25, 50, 50, "TST");
+		EntityFactory.createUIButton(
+				"End Turn",
+				Gdx.graphics.getWidth() - eturnBtnWidth - 25, 
+				35, 
+				eturnBtnWidth, 
+				30, 
+				"TESTBT"
+		);
+		
+	}
+
+	@Override
+	public void render(float delta) {
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		engine.getSystem(ShapeRenderingSystem.class).startRendering();
+		engine.getSystem(TextureRenderingSystem.class).startRendering();
+		
+		engine.update(Gdx.graphics.getRawDeltaTime());
+		
+		engine.getSystem(ShapeRenderingSystem.class).endRendering();
+		engine.getSystem(TextureRenderingSystem.class).endRendering();		
+		
+		engine.getSystem(TextureRenderingSystem.class).startRendering();
+		
+		stage.draw();
+		
+        engine.getSystem(TextureRenderingSystem.class).endRendering();		
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		// TODO Auto-generated method stub
 		
 	}
 

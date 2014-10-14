@@ -30,6 +30,7 @@ public class LabelComponent extends Component implements Poolable {
 
 	public void setCaption(String caption) {
 		this.caption = caption;
+		this.label.setText(caption);
 	}
 
 

@@ -35,13 +35,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.ObjectMap;
 
 public class EntityFactory {
 	
 	
 	static PooledEngine engine = null;
-	private static boolean isPaintInited;
 	private static Color[] paints = new Color[300];
 	private static Entity targetEntity;
 	private static Entity srcEntity;
@@ -59,8 +57,6 @@ public class EntityFactory {
 	public static void init(PooledEngine engine) {
 		
 		EntityFactory.engine = engine;
-		EntityFactory.isPaintInited = false;
-		
 		Json json = new Json();
 		
 		palleteMap = json.fromJson(ColorPalletes.class, Gdx.files.internal("colors.json"));
@@ -469,6 +465,13 @@ public class EntityFactory {
 		stage.addActor(label.getLabel());
 		
 		return entity;
+		
+	}
+	
+	public static void setTurnInfoText(String text) {
+		
+		Entity entity = engine.getSystem(UILabelSystem.class).getLabel("LABEL_TURN_INFO");
+		engine.getSystem(UILabelSystem.class).lm.get(entity).setCaption(text);
 		
 	}
 	
