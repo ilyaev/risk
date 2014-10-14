@@ -7,11 +7,15 @@ public class MoveZoneSelectionCommand extends Command {
 
 	int currentZoneId, screenX, screenY;
 	
-	public MoveZoneSelectionCommand(int currentZoneId, int screenX, int screenY) {
+	
+	
+	public MoveZoneSelectionCommand init(int currentZoneId, int screenX, int screenY) {
 		
 		this.currentZoneId = currentZoneId;
 		this.screenX = screenX;
 		this.screenY = screenY;
+		
+		return this;
 		
 	}
 

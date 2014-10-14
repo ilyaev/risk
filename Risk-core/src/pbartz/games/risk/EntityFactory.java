@@ -124,11 +124,7 @@ public class EntityFactory {
 		int dices = zone.getDices();
 		int newDices = Math.min(8, dices + toAdd);
 		
-		//Gdx.app.log("TAG", String.format("currDices: %d, toAdd: %d, newDices: %d", dices, toAdd, newDices));
-		
-		if (dices == newDices) return;
-		
-		
+		if (dices == newDices) return;		
 		
 		Entity entity;
 		
@@ -140,8 +136,8 @@ public class EntityFactory {
 				
 				entity = EntityFactory.createTextureEntity(
 					ResourceFactory.getTexture("dice.png"), 
-					100,
-					100
+					MathUtils.random(Gdx.graphics.getWidth()),
+					MathUtils.random(Gdx.graphics.getHeight())
 				);
 				
 				MapGenerator.setDiceEntity(zoneId, i, entity);
@@ -167,14 +163,10 @@ public class EntityFactory {
 			);
 			
 			EntityFactory.addDelayedComponent(entity, pInterpolation, MathUtils.random() * 0.2f);
-			
-			//entity.add(pInterpolation);
-			
+	
 		}
 		
 		MapGenerator.increaseZoneDices(zoneId, newDices);
-		
-		
 	}
 	
 	private static PositionComponent getPositionComponent(Entity entity) {
@@ -503,6 +495,20 @@ public class EntityFactory {
 		return engine.getSystem(UIButtonSystem.class).getButton(tag);
 	}
 
+	public static void setButtonText(String tag, String text) {
+		
+		Entity labelEntity = EntityFactory.getEngine().getSystem(UIButtonSystem.class).getButton(tag);
+		EntityFactory.getEngine().getSystem(UIButtonSystem.class).bm.get(labelEntity).setCaption(text);
+		
+	}
+	
+	public static void setLabelText(String tag, String text) {
+		
+		Entity entity = engine.getSystem(UILabelSystem.class).getLabel(tag);
+		engine.getSystem(UILabelSystem.class).lm.get(entity).setCaption(text);
+		
+	}
+	
 	public static void setStage(Stage stage) {
 		EntityFactory.stage = stage;		
 	}

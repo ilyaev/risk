@@ -1,6 +1,7 @@
 package pbartz.games.systems;
 
 import pbartz.games.components.CommandComponent;
+import pbartz.games.factories.CommandFactory;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
@@ -30,6 +31,8 @@ public class CommandExecutionSystem extends DynamicIteratingSystem {
 		Gdx.app.log("CMD_EXEC", command.getCmd().toString());
 		
 		command.getCmd().execute();
+		
+		CommandFactory.freeCommand(command.getCmd());
 		
 		engine.removeEntity(entity);
 		

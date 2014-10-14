@@ -2,6 +2,7 @@ package pbartz.games.risk.commands;
 
 import pbartz.games.components.PositionComponent;
 import pbartz.games.components.ZoneComponent;
+import pbartz.games.factories.CommandFactory;
 import pbartz.games.factories.ComponentFactory;
 import pbartz.games.risk.EntityFactory;
 import pbartz.games.risk.MapGenerator;
@@ -11,11 +12,13 @@ import pbartz.games.utils.HexCell;
 import pbartz.games.utils.Interpolation;
 
 public class AITurnCommand extends Command {
-	
-	private int country;
 
-	public AITurnCommand(int country) {
+	private int country;
+	
+
+	public AITurnCommand init(int country) {
 		this.country = country;
+		return this;
 	}
 
 	@Override
@@ -55,17 +58,19 @@ public class AITurnCommand extends Command {
 		
 		if (targetZoneId > 0 && srcZoneId > 0) {
 			
-			EntityFactory.addCommand(new StartZoneSelectionCommand(country, srcZoneId), true);
+			EntityFactory.addCommand(CommandFactory.createCommand(StartZoneSelectionCommand.class).init(country, srcZoneId), true);
 			
 			HexCell targetCapital = MapGenerator.getCapitalHex(targetZoneId);
 			HexCell srcCapital = MapGenerator.getCapitalHex(srcZoneId);
 			
-			EntityFactory.addCommand(new MoveZoneSelectionCommand(
-					targetZoneId, 
-					(int)srcCapital.getCoordX(MapGenerator.cSize), 
-					(int)srcCapital.getCoordY(MapGenerator.cSize)
-			), true);
+			MoveZoneSelectionCommand cmd = CommandFactory.createCommand(MoveZoneSelectionCommand.class);
+			cmd.init(
+				targetZoneId, 
+				(int)srcCapital.getCoordX(MapGenerator.cSize), 
+				(int)srcCapital.getCoordY(MapGenerator.cSize)
+			);
 			
+			EntityFactory.addCommand(cmd);
 			
 			PositionComponent arrowStartPosition = ComponentFactory.getPositionComponent(
 					EntityFactory.getEngine(), 
@@ -84,7 +89,7 @@ public class AITurnCommand extends Command {
 					Interpolation.EASE_OUT
 			));
 			
-			EntityFactory.addCommand(new FinishZoneSelectionCommand(
+			EntityFactory.addCommand(CommandFactory.createCommand(FinishZoneSelectionCommand.class).init(
 				EntityFactory.currentZoneSelectionComponent,
 				EntityFactory.currentZoneSelectionEntity
 			), 0.7f);
@@ -92,7 +97,7 @@ public class AITurnCommand extends Command {
 			
 		} else {
 			
-			EntityFactory.addCommand(new EndTurnCommand(country));
+			EntityFactory.addCommand(CommandFactory.createCommand(EndTurnCommand.class).init(country));
 			
 		}
 		

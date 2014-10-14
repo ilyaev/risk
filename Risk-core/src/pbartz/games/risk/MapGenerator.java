@@ -640,9 +640,6 @@ public class MapGenerator {
 				maxTotalNbs = totalNbs;
 			}
 			
-			Gdx.app.log("ZC", String.format("ZoneID: %d, adjustents: %d", zoneId, totalNbs));
-			
-			
 		}
 		
 		return maxTotalNbs;
@@ -668,8 +665,6 @@ public class MapGenerator {
 		for(int i = 0 ; i < toAdd ; i++) {
 			
 			int rndZone = MathUtils.random(0, tmpZones.size - 1);
-			
-			Gdx.app.log("IZ", String.format("Increase zone: %d", tmpZones.get(rndZone)));
 			
 			EntityFactory.increaseZoneDices(tmpZones.get(rndZone), 1);
 			

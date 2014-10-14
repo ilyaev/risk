@@ -5,6 +5,7 @@ import pbartz.games.components.PositionComponent;
 import pbartz.games.components.TextureComponent;
 import pbartz.games.components.TouchComponent;
 import pbartz.games.components.ZoneComponent;
+import pbartz.games.factories.CommandFactory;
 import pbartz.games.factories.ComponentFactory;
 import pbartz.games.risk.EntityFactory;
 import pbartz.games.risk.GameInputProcessor;
@@ -65,35 +66,34 @@ public class ZoneTouchSystem extends DynamicIteratingSystem {
 		
 		rect = texture.getRect();
 		rect.setCenter(position.x, position.y);
-		
-		Command cmd = null;
-		
+
 		if (GameInputProcessor.isTouched() && isIntersect() && isZoneHit()) {	
 			
 			if (GameInputProcessor.isTouchDown) {
 
-				cmd = new StartZoneSelectionCommand(
+				Command cmd = CommandFactory.createCommand(StartZoneSelectionCommand.class).init(
 					zone.getCountry(), 
 					zone.getId()
 				);				
+				
+				EntityFactory.addCommand(cmd);
 				
 				GameInputProcessor.clearTouch();	
 				
 			} else if (GameInputProcessor.isTouchMove) {
 				
-				cmd = new MoveZoneSelectionCommand(
+				MoveZoneSelectionCommand cmd = CommandFactory.createCommand(MoveZoneSelectionCommand.class);
+				cmd.init(
 					zone.getId(), 
 					GameInputProcessor.screenX, 
 					GameInputProcessor.screenY
 				);
 				
+				EntityFactory.addCommand(cmd);
+
 				GameInputProcessor.clearTouch();
 			}
 			
-		}
-		
-		if (cmd != null) {
-			EntityFactory.addCommand(cmd);
 		}
 
 

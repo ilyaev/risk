@@ -13,10 +13,14 @@ public class FinishZoneSelectionCommand extends Command {
 	ZoneSelectionComponent selection;
 	Entity selectionEntity;
 	
-	public FinishZoneSelectionCommand(ZoneSelectionComponent selection, Entity selectionEntity) {
+	String tag = "FINISH_ZONE_SELECTION";
+	
+	public FinishZoneSelectionCommand init(ZoneSelectionComponent selection, Entity selectionEntity) {
 		
 		this.selection = selection;
 		this.selectionEntity = selectionEntity;
+		
+		return this;
 		
 	}
 	

@@ -1,5 +1,6 @@
 package pbartz.games.components.UI;
 
+import pbartz.games.factories.CommandFactory;
 import pbartz.games.risk.EntityFactory;
 import pbartz.games.risk.commands.BtnPressedCommand;
 import pbartz.games.risk.commands.EndTurnCommand;
@@ -30,7 +31,9 @@ public class ButtonComponent  extends Component implements Poolable {
 		button.addListener(new ClickListener() {
 	            @Override 
 	            public void clicked(InputEvent event, float x, float y){
-	            	EntityFactory.addCommand(new BtnPressedCommand(tag, button));
+
+	            	EntityFactory.addCommand(CommandFactory.createCommand(BtnPressedCommand.class).init(tag, button));
+	            	
 	            }
 	    });
 		 

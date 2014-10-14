@@ -4,6 +4,7 @@ import pbartz.games.components.ArrowComponent;
 import pbartz.games.components.PositionComponent;
 import pbartz.games.components.ZoneComponent;
 import pbartz.games.components.ZoneSelectionComponent;
+import pbartz.games.factories.CommandFactory;
 import pbartz.games.risk.EntityFactory;
 import pbartz.games.risk.GameInputProcessor;
 import pbartz.games.risk.MapGenerator;
@@ -121,7 +122,7 @@ public class ZoneSelectionSystem extends DynamicIteratingSystem {
 		
 		if (GameInputProcessor.isTouchUp) {
 			
-			EntityFactory.addCommand(new FinishZoneSelectionCommand(selection, entity));				
+			EntityFactory.addCommand(CommandFactory.createCommand(FinishZoneSelectionCommand.class).init(selection, entity));				
 			
 			GameInputProcessor.clearTouch();
 			

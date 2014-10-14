@@ -5,12 +5,16 @@ import pbartz.games.utils.Command;
 
 public class StartZoneSelectionCommand extends Command {
 
+	String tag = "START_ZONE_SELECTION";
+	
 	int countryId;
 	int srcZoneId;
 	
-	public StartZoneSelectionCommand(int countryId, int srcZoneId) {
+	public StartZoneSelectionCommand init(int countryId, int srcZoneId) {
 		this.countryId = countryId;
 		this.srcZoneId = srcZoneId;
+		
+		return this;
 	}
 	
 	@Override

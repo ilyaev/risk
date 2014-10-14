@@ -1,9 +1,11 @@
 package pbartz.games.risk.screens;
 
+import pbartz.games.factories.CommandFactory;
 import pbartz.games.risk.EntityFactory;
 import pbartz.games.risk.GameInputProcessor;
 import pbartz.games.risk.ResourceFactory;
 import pbartz.games.risk.RiskGame;
+import pbartz.games.risk.commands.BtnPressedCommand;
 import pbartz.games.systems.ArrowRenderingSystem;
 import pbartz.games.systems.BlinkSystem;
 import pbartz.games.systems.ColorAlphaInterpolationSystem;
@@ -97,6 +99,11 @@ public class HUDScreen implements Screen {
 		ResourceFactory.init();		
 		
 		initUI();
+		
+		BtnPressedCommand cmd = CommandFactory.createCommand(BtnPressedCommand.class);
+		cmd.init("test", null);
+		
+		CommandFactory.freeCommand(cmd);
 		
 	}
 
