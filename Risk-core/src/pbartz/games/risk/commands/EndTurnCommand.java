@@ -29,7 +29,11 @@ public class EndTurnCommand extends Command {
 			MapGenerator.distributeDicesToCountry(toAdd, country);
 		}
 		
+		int prevCountry = country;
+		
 		country += 1;
+		
+		
 		
 		if (country > MapGenerator.getCountriesCount()) {
 			
@@ -37,13 +41,13 @@ public class EndTurnCommand extends Command {
 			
 		}
 		
-		//if (country > 1) {
+		EntityFactory.UISwitchPlayer(prevCountry, country);
 		
-			EntityFactory.setButtonText("IMG_PLAYER", Integer.toString(country));
-
+		if (country > 1) {
+		
 			EntityFactory.addCommand(CommandFactory.createCommand(AITurnCommand.class).init(country), 0.5f);
 			
-		//}
+		}
 		
 	}
 

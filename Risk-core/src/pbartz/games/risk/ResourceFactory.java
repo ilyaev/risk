@@ -1,6 +1,8 @@
 package pbartz.games.risk;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ObjectMap;
 
@@ -22,6 +24,18 @@ public class ResourceFactory {
 		}
 		
 		return cache.get(fileName);		
+	}
+	
+	public static Texture getFlatColorTexture(Color color) {
+		
+		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+		pixmap.setColor(color);
+		pixmap.fill();
+		
+		Texture texture = new Texture(pixmap);	
+		
+		return texture;
+		
 	}
 
 }

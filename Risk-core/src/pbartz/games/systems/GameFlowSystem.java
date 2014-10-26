@@ -81,11 +81,11 @@ public class GameFlowSystem extends EntitySystem {
 				
 			}
 			
-			//if (srcZoneCmp.getCountry() > 1) {
+			if (srcZoneCmp.getCountry() > 1) {
 			
 				EntityFactory.addCommand(CommandFactory.createCommand(AITurnCommand.class).init(srcZoneCmp.getCountry()), 0.5f);
 				
-			//}
+			}
 			
 			state = ROLLING;
 			

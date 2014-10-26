@@ -1,9 +1,11 @@
 package pbartz.games.risk.commands;
 
+import com.badlogic.gdx.utils.Pool.Poolable;
+
 import pbartz.games.utils.Command;
 import pbartz.games.utils.EventBus;
 
-public class MoveZoneSelectionCommand extends Command {
+public class MoveZoneSelectionCommand extends Command implements Poolable {
 
 	int currentZoneId, screenX, screenY;
 	
@@ -31,6 +33,10 @@ public class MoveZoneSelectionCommand extends Command {
 	@Override
 	public String toString() {
 		return String.format("CMD_MoveZoneSelection: zoneId: %d, x: %d, y: %d", currentZoneId, screenX, screenY);
+	}
+	
+	public void reset() {
+		
 	}
 
 }

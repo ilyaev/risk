@@ -5,7 +5,6 @@ import pbartz.games.risk.GameInputProcessor;
 import pbartz.games.risk.MapGenerator;
 import pbartz.games.risk.ResourceFactory;
 import pbartz.games.risk.RiskGame;
-import pbartz.games.risk.commands.EndTurnCommand;
 import pbartz.games.systems.ArrowRenderingSystem;
 import pbartz.games.systems.BlinkSystem;
 import pbartz.games.systems.ColorAlphaInterpolationSystem;
@@ -17,6 +16,7 @@ import pbartz.games.systems.PositionInterpolationSystem;
 import pbartz.games.systems.ShapeRenderingSystem;
 import pbartz.games.systems.TextureRenderingSystem;
 import pbartz.games.systems.UIButtonSystem;
+import pbartz.games.systems.UIImageSystem;
 import pbartz.games.systems.UILabelSystem;
 import pbartz.games.systems.ZoneSelectionSystem;
 import pbartz.games.systems.ZoneTouchSystem;
@@ -27,14 +27,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class MainScreen implements Screen {
 	
@@ -67,7 +63,6 @@ public class MainScreen implements Screen {
 		
         engine.getSystem(TextureRenderingSystem.class).endRendering();	
 		
-
 		
 		//game.calcFPS();
 	}
@@ -94,7 +89,7 @@ public class MainScreen implements Screen {
 		container.add(scroll).expand().fill();
 		
 		EntityFactory.createUILabel("Your Turn", labelX, labelY, 1, 1, 1, 1, "LABEL_TURN_INFO");
-		EntityFactory.createUIButton("1", 25, 25, 50, 50, "IMG_PLAYER");
+		
 		EntityFactory.createUIButton(
 				"End Turn",
 				Gdx.graphics.getWidth() - eturnBtnWidth - 25, 
@@ -103,6 +98,8 @@ public class MainScreen implements Screen {
 				50, 
 				"btnEndTurn"
 		);
+		
+		EntityFactory.UISwitchPlayer(0, 1);
 		
 	}
 
@@ -159,6 +156,7 @@ public class MainScreen implements Screen {
 		engine.addSystem(new DelayedComponentSystem(engine));
 		engine.addSystem(new UIButtonSystem());
 		engine.addSystem(new UILabelSystem());
+		engine.addSystem(new UIImageSystem());
 		
 		EntityFactory.init(engine);
 		EntityFactory.initPallete();

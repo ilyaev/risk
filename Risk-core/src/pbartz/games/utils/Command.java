@@ -7,8 +7,6 @@ public abstract class Command {
 	public int index;
 	public static int lastIndex = 0; 
 	
-	public String tag = "DEFAULT";
-	
 	public boolean free = false;
 	
 	public PooledEngine engine;

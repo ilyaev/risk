@@ -40,7 +40,7 @@ public class AITurnCommand extends Command {
 				for(int j = 0 ; j < zone.getNeigbors().size ; j++) {
 					
 					ZoneComponent nbZone = EntityFactory.getZoneComponentById(zone.getNeigbors().get(j));
-					if (nbZone.getDices() <= zone.getDices() && zone.getCountry() != nbZone.getCountry()) {
+					if (nbZone.getCountry() > 0 && nbZone.getDices() <= zone.getDices() && zone.getCountry() != nbZone.getCountry()) {
 						flag = true;
 						targetZoneId = zone.getNeigbors().get(j);
 						break;
@@ -57,6 +57,7 @@ public class AITurnCommand extends Command {
 		}
 		
 		if (targetZoneId > 0 && srcZoneId > 0) {
+			
 			
 			EntityFactory.addCommand(CommandFactory.createCommand(StartZoneSelectionCommand.class).init(country, srcZoneId), true);
 			

@@ -2,7 +2,6 @@ package pbartz.games.risk;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
@@ -139,7 +138,13 @@ public class MapGenerator {
 			pixmap.setColor(0, 0, 0, 0);
 			pixmap.fill();
 			
-			ZoneComponent zoneComponent = new ZoneComponent(zone, zoneCountryPool.get(zone - 1) + 1);
+			int zCountry = zoneCountryPool.get(zone - 1) + 1;
+			
+			if (MathUtils.random() > 0.7f) {
+				zCountry = 0;
+			}
+			
+			ZoneComponent zoneComponent = new ZoneComponent(zone, zCountry);
 			
 			Color pColor = EntityFactory.getColorByZone(zoneComponent.getCountry());
 			
@@ -301,7 +306,6 @@ public class MapGenerator {
 		ZoneComponent zone;
 		
 		for (int i = 1 ; i <= zonesCount ; i++) {
-			
 			zone = EntityFactory.getZoneComponentById(i);
 			zone.setDices(MathUtils.random(1,7));
 			
@@ -320,6 +324,8 @@ public class MapGenerator {
 				
 			srcHex = MapGenerator.getCapitalHex(i);
 			zone = EntityFactory.getZoneComponentById(i);
+			
+			if (zone.getCountry() <= 0) continue;
 			
 			srcPointX = srcHex.getCoordX(MapGenerator.cSize);
 			srcPointY = srcHex.getCoordY(MapGenerator.cSize);
@@ -432,6 +438,8 @@ public class MapGenerator {
 		
 		putCapitalsToWorld();
 		
+		//putSpacesToWorld();
+		
 		createWorldZones();
 		
 		generateZoneCountryPool();
@@ -482,8 +490,51 @@ public class MapGenerator {
 					cell.zone = capitals.get(currentZone).zone;
 				}
 				
+				
 			}
 		}		
+	}
+	
+	private void putSpacesToWorld() {
+		
+		int margin = 1;
+		HexCell capitalCell = null;
+		
+		for (int i = 0 ; i < 3 ; i++) {
+			
+			boolean flag = false;
+			
+			while (!flag) {
+				
+				int cellQ = MathUtils.random(cellsH);
+				int cellR = MathUtils.random(cellsV);
+				
+				if (cellQ > margin && cellQ < (cellsH - margin) && cellR > margin && cellR < (cellsV - margin)) {
+				
+					capitalCell = cells[cellQ][cellR];
+					
+					int minDistance = 10000;
+
+					for(int j = 0 ; j < capitals.size ; j++) {
+						
+						if (capitals.get(j).distanceTo(capitalCell) < minDistance) {
+							minDistance = capitals.get(j).distanceTo(capitalCell);
+						}
+						
+					}
+					
+					if (minDistance > 4) flag = true;
+					
+				}
+				
+			}
+			
+			
+			capitalCell.zone = i + 1;
+			
+			capitals.add(capitalCell);
+		}
+		
 	}
 	
 	private void putCapitalsToWorld() {

@@ -14,7 +14,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class TextureRenderingSystem extends IteratingSystem {
 	
 	public ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
-	private ComponentMapper<ShapeComponent> sm = ComponentMapper.getFor(ShapeComponent.class);
+	public ComponentMapper<ShapeComponent> sm = ComponentMapper.getFor(ShapeComponent.class);
 	public ComponentMapper<TextureComponent> tm = ComponentMapper.getFor(TextureComponent.class);
 	public ComponentMapper<ColorAlphaComponent> am = ComponentMapper.getFor(ColorAlphaComponent.class);
 	

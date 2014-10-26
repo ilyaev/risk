@@ -8,10 +8,12 @@ import com.badlogic.gdx.utils.ReflectionPool;
 
 public class CommandFactory {
 
-	private static CommandPools commandPools = new CommandPools(100, 1000);
+	private static CommandPools commandPools = new CommandPools(50, 50);
 	
 	public static <T extends Command> T createCommand(Class<T> componentType) {
+		
 		return commandPools.obtain(componentType);
+		
 	}
 	
 	public static void freeCommand(Command cmd) {
@@ -21,16 +23,20 @@ public class CommandFactory {
 	}
 	
 	private static class CommandPools {
+		
+		@SuppressWarnings("rawtypes")
 		private ObjectMap<Class<?>, ReflectionPool> pools;
 		private int initialSize;
 		private int maxSize;
 		
+		@SuppressWarnings("rawtypes")
 		public CommandPools(int initialSize, int maxSize) {
 			this.pools = new ObjectMap<Class<?>, ReflectionPool>();
-			this.initialSize = 0;
-			this.maxSize = 0;
+			this.initialSize = initialSize;
+			this.maxSize = maxSize;
 		}
 		
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		public <T> T obtain(Class<T> type) {
 			ReflectionPool pool = pools.get(type);
 			
@@ -42,6 +48,7 @@ public class CommandFactory {
 			return (T)pool.obtain();
 		}
 		
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public void free(Object object) {
 			if (object == null) {
 				throw new IllegalArgumentException("object cannot be null.");
@@ -50,12 +57,13 @@ public class CommandFactory {
 			ReflectionPool pool = pools.get(object.getClass());
 			
 			if (pool == null) {
-				return; // Ignore freeing an object that was never retained.
+				return;
 			}
 			
 			pool.free(object);
 		}
 
+		@SuppressWarnings({ "rawtypes", "unused" })
 		public void freeAll(Array objects) {
 			if (objects == null) throw new IllegalArgumentException("objects cannot be null.");
 			

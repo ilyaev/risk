@@ -12,12 +12,14 @@ import pbartz.games.components.TextureComponent;
 import pbartz.games.components.ZoneComponent;
 import pbartz.games.components.ZoneSelectionComponent;
 import pbartz.games.components.UI.ButtonComponent;
+import pbartz.games.components.UI.ImageComponent;
 import pbartz.games.components.UI.LabelComponent;
 import pbartz.games.factories.ComponentFactory;
 import pbartz.games.systems.BlinkSystem;
 import pbartz.games.systems.ColorInterpolationSystem;
 import pbartz.games.systems.TextureRenderingSystem;
 import pbartz.games.systems.UIButtonSystem;
+import pbartz.games.systems.UIImageSystem;
 import pbartz.games.systems.UILabelSystem;
 import pbartz.games.systems.ZoneSelectionSystem;
 import pbartz.games.utils.Command;
@@ -115,6 +117,18 @@ public class EntityFactory {
 		engine.addEntity(entity);
 		
 		return entity;
+	}
+	
+	public static Entity createTextureEntity(Texture texture, int pX, int pY, int width, int height){
+		
+		Entity entity = EntityFactory.createTextureEntity(texture, pX, pY);
+		
+		engine.getSystem(TextureRenderingSystem.class).tm.get(entity).setFlipped(true);
+		engine.getSystem(TextureRenderingSystem.class).sm.get(entity).setrWidth(width);
+		engine.getSystem(TextureRenderingSystem.class).sm.get(entity).setrHeight(height);
+		
+		return entity;
+		
 	}
 	
 	public static void increaseZoneDices(int zoneId, int toAdd) {
@@ -252,6 +266,10 @@ public class EntityFactory {
 	public static ZoneComponent getZoneComponentById(int zone) {
 		
 		tmpEntity = getZoneEntityById(zone);
+		
+		if (tmpEntity == null) {
+			return null;
+		}
 		
 		return engine.getSystem(ZoneSelectionSystem.class).zm.get(tmpEntity);
 		
@@ -467,6 +485,34 @@ public class EntityFactory {
 		
 	}
 	
+	public static Entity createUIImage(Texture texture, float x, float y, float width, float height, String tag) {
+		
+
+		Entity entity = engine.createEntity();
+		
+		PositionComponent position = engine.createComponent(PositionComponent.class);
+		ImageComponent image = engine.createComponent(ImageComponent.class);
+		ShapeComponent shape = engine.createComponent(ShapeComponent.class);
+		ColorAlphaComponent alpha = engine.createComponent(ColorAlphaComponent.class);
+		
+		alpha.init(1f);
+		
+		position.init(x, y);
+		shape.init(ShapeComponent.SHAPE_RECTANGLE, width, height);		
+		image.init(texture);
+		
+		entity.add(position).add(shape).add(image).add(alpha);
+		
+		engine.addEntity(entity);
+		
+		stage.addActor(image.getImage());		
+		
+		engine.getSystem(UIImageSystem.class).addImage(entity, tag);
+		
+		return entity;
+		
+	}
+	
 	public static Entity createUIButton(String label, float x, float y, float width, float height, String tag) {
 		
 		Entity entity = engine.createEntity();
@@ -494,11 +540,17 @@ public class EntityFactory {
 	public static Entity getUIButton(String tag) {
 		return engine.getSystem(UIButtonSystem.class).getButton(tag);
 	}
+	
+	public static Entity getUIImage(String tag) {
+		return engine.getSystem(UIImageSystem.class).getImage(tag);
+	}
 
 	public static void setButtonText(String tag, String text) {
 		
 		Entity labelEntity = EntityFactory.getEngine().getSystem(UIButtonSystem.class).getButton(tag);
-		EntityFactory.getEngine().getSystem(UIButtonSystem.class).bm.get(labelEntity).setCaption(text);
+		if (labelEntity != null) {
+			EntityFactory.getEngine().getSystem(UIButtonSystem.class).bm.get(labelEntity).setCaption(text);
+		}
 		
 	}
 	
@@ -519,6 +571,66 @@ public class EntityFactory {
 	
 	public static Skin getSkin() {
 		return EntityFactory.skin;
+	}
+
+	public static void UISwitchPlayer(int prevCountry, int country) {
+		
+		
+		Color color = EntityFactory.getColorByZone(country);
+		
+		Entity prevEntity = EntityFactory.getUIImage("COUNTRY_" + Integer.toString(prevCountry));
+		Entity curEntity = EntityFactory.getUIImage("COUNTRY_" + Integer.toString(country));
+		
+		if (prevEntity != null) {
+			
+			prevEntity.add(ComponentFactory.getPositionInterpolationComponent(
+					engine, 
+					EntityFactory.getEntityPositionComponent(prevEntity), 
+					Gdx.graphics.getWidth(), 
+					25, 
+					0.5f, 
+					Interpolation.EASE_IN
+			));
+			
+			prevEntity.add(ComponentFactory.getColorAlphaInterpolationComponent(
+					engine, 
+					1f, 
+					0f, 
+					0.5f, 
+					Interpolation.EASE_OUT
+			));
+			
+		}
+		
+		if (curEntity == null) {
+		
+			Texture texture = ResourceFactory.getFlatColorTexture(color);
+			curEntity = EntityFactory.createUIImage(texture, 25, 500, 50, 50, "COUNTRY_" + Integer.toString(country));
+			
+			
+		}
+		
+		curEntity.add(ComponentFactory.getColorAlphaInterpolationComponent(
+				engine, 
+				0f, 
+				1f, 
+				0.5f, 
+				Interpolation.EASE_OUT
+		));
+		
+		EntityFactory.getEntityPositionComponent(curEntity).x = 25;
+		EntityFactory.getEntityPositionComponent(curEntity).y = 500; 
+
+	
+		curEntity.add(ComponentFactory.getPositionInterpolationComponent(
+			engine, 
+			EntityFactory.getEntityPositionComponent(curEntity), 
+			25, 
+			25, 
+			0.5f, 
+			Interpolation.EASE_IN
+		));
+		
 	}
 	
 

@@ -28,8 +28,9 @@ public class CommandExecutionSystem extends DynamicIteratingSystem {
 		
 		command = cm.get(entity);
 		
-		Gdx.app.log("CMD_EXEC", command.getCmd().toString());
-		
+		Gdx.app.log("CMD_EXEC", "#" + Integer.toString(command.getCmd().index) + " " +command.getCmd().toString());
+		Gdx.app.log("MEM", "Total Memory:" + Runtime.getRuntime().totalMemory() / (1024*1024));
+		Gdx.app.log("MEM", "Used Memory:" + Runtime.getRuntime().freeMemory() / (1024*1024));
 		command.getCmd().execute();
 		
 		CommandFactory.freeCommand(command.getCmd());

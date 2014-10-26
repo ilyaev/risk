@@ -47,6 +47,7 @@ public class ButtonComponent  extends Component implements Poolable {
 	public void reset() {
 		tag = "";
 		if (button != null) {
+			button.clear();
 			button.remove();
 		}
 	}
